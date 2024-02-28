@@ -1,11 +1,25 @@
 package com.farina.exemplo;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.view.View;
 
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
+
+    EditText editPeso;
+    EditText editAltura;
+    TextView textViewResultIMC;
+    TextView textViewResultSituacao;
+    CheckBox cbIdade;
+    RadioButton rbHomem;
+    RadioButton rbMulher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,51 +29,94 @@ public class MainActivity extends AppCompatActivity {
         Toast toast = Toast.makeText(getApplicationContext(),
                 "A atividade foi CRIADA!!!", Toast.LENGTH_LONG);
         toast.show();
-    }
-    protected void onStart(){
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "A atividade INICIOU !!!!", Toast.LENGTH_LONG);
-        toast.show();
-        super.onStart();
+
+        editPeso = (EditText) findViewById(R.id.editTextPeso);
+        editAltura = (EditText) findViewById(R.id.editTextAltura);
+        textViewResultIMC = (TextView) findViewById(R.id.textViewResultIMC);
+        textViewResultSituacao = (TextView) findViewById(R.id.textViewResultSituacao);
+        cbIdade = (CheckBox) findViewById(R.id.checkBoxIdade);
+        rbHomem = (RadioButton) findViewById(R.id.radioButtonMasculino);
+        rbMulher = (RadioButton) findViewById(R.id.radioButtonFeminino);
+
     }
 
-    @Override
-    protected void onRestart() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "A atividade REINICIOU !!!!", Toast.LENGTH_LONG);
-        toast.show();
-        super.onRestart();
-    }
+    public void calcular (View v){
+        double peso = 0, altura = 0, imc = 0;
+        int idade = 0;
+        int sexo = 0;
+        String situacao;
 
-    @Override
-    protected void onResume() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "A atividade RETORNOU !!!", Toast.LENGTH_LONG);
-        toast.show();
-        super.onResume();
-    }
+        peso = Double.parseDouble(editPeso.getText().toString());
+        altura = Double.parseDouble(editAltura.getText().toString());
 
-    @Override
-    protected void onPause() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "A atividade entrou em PAUSA !!!", Toast.LENGTH_LONG);
-        toast.show();
-        super.onPause();
-    }
+        if (cbIdade.isChecked()){
+            idade = 1;
+        }
+        else {
+            idade = 2;
+        }
+        if (rbMulher.isChecked()){
+            sexo = 1;
+        }
+        else {
+            sexo = 2;
+        }
+        imc = peso / Math.pow(altura, 2);
+        if (idade == 1){
+            situacao = "Idade fora da faixa. Situacao não determinada";
+        }
+        else {
+            if (sexo == 1){
+                if (imc < 19.1){
+                    situacao = "Abaixo do peso.";
+                }
+                else {
+                    if (imc < 25.8){
+                        situacao = "No peso normal.";
+                    }
+                    else {
+                        if (imc < 27.3){
+                            situacao = "Marginalmente acima do peso.";
+                        }
+                        else {
+                            if (imc < 32.3){
+                                situacao = "Acima do peso";
+                            }
+                            else {
+                                situacao = "Obesa.";
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if (imc < 20.7){
+                    situacao = "Abaixo do peso.";
+                }
+                else {
+                    if (imc < 26.4){
+                        situacao = "No peso normal.";
+                    }
+                    else {
+                        if (imc < 27.8){
+                            situacao = "Marginalmente acima do peso";
+                        }
+                        else {
+                            if (imc < 31.1){
+                                situacao = "Acima do peso";
+                            }
+                            else {
+                                situacao = "Obeso";
+                            }
+                        }
+                    }
+                }
 
-    @Override
-    protected void onStop() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "A atividade PAROU !!!", Toast.LENGTH_LONG);
-        toast.show();
-        super.onStop();
-    }
+            }
+        }
 
-    @Override
-    protected void onDestroy() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "A atividade ENCERROU !!!", Toast.LENGTH_LONG);
-        toast.show();
-        super.onDestroy();
+        textViewResultIMC.setText(String.format("%.2f", imc));
+        textViewResultSituacao.setText(situacao);
+
     }
 }
